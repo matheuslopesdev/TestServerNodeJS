@@ -1,3 +1,20 @@
+import Result from './result.js';
+
+export const handleError = (error, logger) => {
+    let errorMessage = typeof error === "string" ? error : error.message;
+    
+    if(!errorMessage) {
+        errorMessage = error.body != null ? error.body.message : 'An error occurred, try again or contact your administrator!';
+    }
+
+    if(Array.isArray(errorMessage) && errorMessage[0].message) {
+        errorMessage = errorMessage[0].message;
+    }
+
+	logger.error('Error: ' + errorMessage);
+    return new Result(false, errorMessage);
+}
+
 export const generateISODateWithOffset = (date) => {
     let tzo = -date.getTimezoneOffset();
     let dif = tzo >= 0 ? '+' : '-';
@@ -16,7 +33,7 @@ export const generateISODateWithOffset = (date) => {
 		':' + pad(tzo % 60);
 }
 
-export const generateDatString = (date) => {   
+export const generateDateString = (date) => {   
     const pad = function(num) {
 		var norm = Math.floor(Math.abs(num));
 		return (norm < 10 ? '0' : '') + norm;

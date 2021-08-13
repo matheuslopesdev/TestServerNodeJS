@@ -7,13 +7,14 @@
         "start": "DEBUG=* node ./bin/www.js"
     },
     "dependencies": {
-        "cookie-parser": "~1.4.4",
-        "debug": "~2.6.9",
         "express": "~4.16.1",
+        "express-winston": "^4.1.0",
         "http-errors": "~1.6.3",
-        "jade": "^0.31.2",
-        "morgan": "~1.9.1",
-        "nodemon": "^2.0.12",
-        "rotating-file-stream": "^2.1.5"
+        "mongoose": "^5.13.7",
+        "winston": "^3.3.3",
+        "winston-daily-rotate-file": "^4.5.5"
+    },
+    "devDependencies": {
+        "dotenv": "^10.0.0"
     }
 }
