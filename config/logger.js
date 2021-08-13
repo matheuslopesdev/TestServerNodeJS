@@ -1,21 +1,33 @@
 import path from 'path';
-import rotatingFileStream from 'rotating-file-stream';
 
-import debug from 'debug';
+import winston from 'winston';
+import winstonRotating from 'winston-daily-rotate-file';
+import expressWinston from 'express-winston';
 
-import { generateDatString } from '../utils/utils.js';
+export const rotatingTransport = new winston.transports.DailyRotateFile({
+    filename: 'log-%DATE%.log',
+    datePattern: 'YYYY-MM-DD',
+    dirname: path.join(path.resolve(), 'logs')
+})
 
-export const logStream = rotatingFileStream.createStream(`log-${generateDatString(new Date())}.log`, {
-    interval: '1d',
-    path: path.join(path.resolve(), 'logs')
+const { combine, timestamp, printf } = winston.format;
+
+const myFormat = combine(
+    timestamp(),
+    printf(({ level, message, timestamp }) => {
+        return `${timestamp} ${level}: ${message}`;
+    })
+);
+
+export const logger = winston.createLogger({
+    format: myFormat,
+    level: 'debug',
+    transports: [ rotatingTransport ]
 });
 
-process.stdout.pipe(logStream);
-process.stderr.pipe(logStream);
-
-export const logger = {
-    debug: debug('APP:debug'),
-    info: debug('APP:info'),
-    warning: debug('APP:warning'),
-    error: debug('APP:error')
-}
+export const expressLogger = expressWinston.logger({ 
+    format: myFormat,
+    level: 'debug',
+    transports: [ rotatingTransport ],
+    msg: 'method: {{req.method}} | url: {{req.url}} | status: {{res.statusCode}} | response time: {{res.responseTime}} ms'
+ })
