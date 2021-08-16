@@ -4,25 +4,66 @@ import { logger } from '../config/logger.js';
 import Result from '../utils/result.js';
 
 export default class UserService {
+    static #instance;
+
+    static getInstance() {
+        if(!this.#instance) {
+            this.#instance = new UserService();
+        }
+
+        return this.#instance;
+    }
+
     async getUserByLogin(login) {
-        return {};
+        logger.debug(`Starting getUserByLogin with ${JSON.stringify(login)}`);
+        
+        let result;
+
+        try {
+            const dbResponse = await UserModel.findByLogin(login);
+            console.log(JSON.stringify(dbResponse));
+            result = new Result(true, dbResponse);
+        }
+        catch(ex) {
+            result = handleError(ex);
+        }
+
+        logger.debug(`Finishing getUserByLogin with response ${JSON.stringify(result)}`);
+        return result;
     }
 
     async createUser(user) {
         logger.debug(`Starting createUser with ${JSON.stringify(user)}`);
 
-        let response;
+        let result;
 
         try {
-            const result = await UserModel.insertMany([ user ])
-            response = new Result(true, 'User created successfully');
-            response.userId = result[0]._id;
+            const dbResponse = await UserModel.insertMany([ user ])
+            result = new Result(true, 'User created successfully');
+            result.userId = dbResponse[0]._id;
         }
         catch(ex) {
-            response = handleError(ex, logger);
+            result = handleError(ex, logger);
         }
 
-        logger.debug(`Finishing createUser with response ${JSON.stringify(response)}`);
-        return response;
+        logger.debug(`Finishing createUser with response ${JSON.stringify(result)}`);
+        return result;
+    }
+
+    async updateUser(userId, user) {
+        logger.debug(`Starting createUser with ${JSON.stringify(user)}`);
+
+        let result;
+
+        try {
+            await UserModel.updateOne({_id: userId}, user);
+            result = new Result(true, 'User updated successfully');
+        }
+        catch(ex) {
+            result = handleError(ex, logger);
+        }
+
+        logger.debug(`Finishing createUser with response ${JSON.stringify(result)}`);
+        return result;
     }
 }
