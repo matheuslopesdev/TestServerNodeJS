@@ -1,11 +1,9 @@
 export default class Result {
     success;
-    message;
-    returnCode;
+    result;
     
-    constructor(success, message, returnCode) {
+    constructor(success, result) {
         this.success = success;
-        this.message = message;
-        this.returnCode = returnCode;
+        this.result = result;
     }
 }
