@@ -66,6 +66,21 @@ export default class UserService {
         logger.debug(`Finishing updateUser with response ${JSON.stringify(result)}`);
         return result;
     }
+
+    async deleteUser(login) {
+        logger.debug(`Starting deleteUser with ${JSON.stringify(login)}`);
+
+        let result;
+
+        try {
+            await UserModel.deleteOne({ $or: [{ username: login },{ email: login }]});
+            result = new Result(true, 'User deleted successfully');
+        }
+        catch(ex) {
+            result = handleError(ex, logger);
+        }
+
+        logger.debug(`Finishing deleteUser with response ${JSON.stringify(result)}`);
         return result;
     }
 }

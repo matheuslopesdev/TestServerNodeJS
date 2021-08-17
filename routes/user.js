@@ -29,20 +29,27 @@ router.post('/', async (req, res) => {
 });
 
 /* Update user info */
-router.put('/:userId', async (req, res) => {
-    if(req.body && req.params.userId) {
-        const response = await UserService.getInstance().updateUser(req.params.userId, req.body);
+router.put('/:login', async (req, res) => {
+    if(req.body && req.params.login) {
+        const response = await UserService.getInstance().updateUser(req.params.login, req.body);
         res.status(response.success ? 200 : 400);
         return res.send(response);
     }
 
     res.status(400);
-    return res.send(new Result(false, 'Empty body or Id!'));
+    return res.send(new Result(false, 'Empty body or missing login!'));
 });
 
 /* Delete user info */
-router.delete('/', async (req, res) => {
-    return res.send('respond with a resource');
+router.delete('/:login', async (req, res) => {
+    if(req.params.login) {
+        const response = await UserService.getInstance().deleteUser(req.params.login);
+        res.status(response.success ? 200 : 400);
+        return res.send(response);
+    }
+
+    res.status(400);
+    return res.send(new Result(false, 'Missing login!'));
 });
 
 export default router;
