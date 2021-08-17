@@ -21,13 +21,20 @@ const myFormat = combine(
 
 export const logger = winston.createLogger({
     format: myFormat,
-    level: 'debug',
+    level: 'database',
+    levels: { 
+        error: 0, 
+        warn: 1, 
+        info: 2, 
+        debug: 3, 
+        database: 4 
+      },
     transports: [ rotatingTransport ]
 });
 
 export const expressLogger = expressWinston.logger({ 
     format: myFormat,
-    level: 'debug',
+    level: 'info',
     transports: [ rotatingTransport ],
     msg: 'method: {{req.method}} | url: {{req.url}} | status: {{res.statusCode}} | response time: {{res.responseTime}} ms'
- })
+});
