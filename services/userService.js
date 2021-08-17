@@ -50,20 +50,22 @@ export default class UserService {
         return result;
     }
 
-    async updateUser(userId, user) {
-        logger.debug(`Starting createUser with ${JSON.stringify(user)}`);
+    async updateUser(login, user) {
+        logger.debug(`Starting updateUser with ${JSON.stringify(user)}`);
 
         let result;
 
         try {
-            await UserModel.updateOne({_id: userId}, user);
+            await UserModel.updateOne({ $or: [{ username: login },{ email: login }]}, user);
             result = new Result(true, 'User updated successfully');
         }
         catch(ex) {
             result = handleError(ex, logger);
         }
 
-        logger.debug(`Finishing createUser with response ${JSON.stringify(result)}`);
+        logger.debug(`Finishing updateUser with response ${JSON.stringify(result)}`);
+        return result;
+    }
         return result;
     }
 }
