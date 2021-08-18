@@ -2,7 +2,7 @@ import express from 'express';
 
 import { expressLogger } from '../config/logger.js'
 
-import indexRoutes  from '../routes/index.js';
+import messageRoutes  from '../routes/message.js';
 import userRoutes  from '../routes/user.js';
 
 export default class Server {
@@ -14,7 +14,7 @@ export default class Server {
         app.use(express.urlencoded({ extended: false }));
         
         // ROUTES
-        app.use('/', indexRoutes);
+        app.use('/message', messageRoutes);
         app.use('/user', userRoutes);
         
         // catch 404 and forward to error handler
