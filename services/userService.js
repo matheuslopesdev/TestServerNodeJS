@@ -37,9 +37,10 @@ export default class UserService {
         let result;
 
         try {
-            const dbResponse = await UserModel.insertMany([ user ])
+            const document = new UserModel(user);
+            const dbResponse = await document.save();
             result = new Result(true, 'User created successfully');
-            result.userId = dbResponse[0]._id;
+            result.userId = dbResponse._id;
         }
         catch(ex) {
             result = handleError(ex, logger);
@@ -55,7 +56,18 @@ export default class UserService {
         let result;
 
         try {
-            await UserModel.updateOne({ $or: [{ username: login },{ email: login }]}, user);
+            const dbUser = await UserModel.findByLogin(login);
+
+            if(!dbUser) {
+                throw new Error(`User ${login} not found!`);
+            }
+
+            user._id = dbUser._id;
+
+            const document = new UserModel(user);
+            document.isNew = false;
+
+            await document.save({ validateModifiedOnly: true, timestamps: { createdAt:false, updatedAt:true } });
             result = new Result(true, 'User updated successfully');
         }
         catch(ex) {
@@ -72,7 +84,13 @@ export default class UserService {
         let result;
 
         try {
-            await UserModel.deleteOne({ $or: [{ username: login },{ email: login }]});
+            const dbUser = await UserModel.findByLogin(login);
+
+            if(!dbUser) {
+                throw new Error(`User ${login} not found!`);
+            }
+
+            await dbUser.remove();
             result = new Result(true, 'User deleted successfully');
         }
         catch(ex) {

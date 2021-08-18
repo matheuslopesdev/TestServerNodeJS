@@ -34,9 +34,11 @@ export default class MessageService {
 
             message.user = user._id;
 
-            const dbResponse = await MessageModel.insertMany([ message ]);
+            const document = new MessageModel(message);
+            const dbResponse = await document.save();
+
             result = new Result(true, 'Message posted successfully');
-            result.messageId = dbResponse[0]._id;
+            result.messageId = dbResponse._id;
         }
         catch(ex) {
             result = handleError(ex, logger);

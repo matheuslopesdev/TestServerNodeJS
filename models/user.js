@@ -14,8 +14,9 @@ const userSchema = new Mongoose.Schema(
             unique: true,
             required: true
         },
-        test: {
-            type: String
+        password: {
+            type: String,
+            required: true
         }
     },
     { timestamps: true }
@@ -25,12 +26,9 @@ userSchema.statics.findByLogin = async function(login) {
     return await this.findOne({ $or: [{ username: login },{ email: login }]});
 }
 
-userSchema.pre('deleteOne', async function(next) {
-    const username = this.getFilter().$or[0].username;
-    logger.database(`pre remove user hook - username: ${username}`);
-
-    const user = await this.model.findByLogin(username);
-    MessageModel.deleteMany({ user: user._id }, next);
+userSchema.pre('remove', async function(next) {
+    logger.database(`pre remove user hook - username: ${this.username}`);
+    MessageModel.deleteMany({ user: this._id }, next);
 });
 
 const User = Mongoose.model('User', userSchema);

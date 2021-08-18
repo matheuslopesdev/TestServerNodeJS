@@ -29,7 +29,7 @@ router.post('/', async (req, res) => {
 });
 
 /* Update user info */
-router.put('/:login', async (req, res) => {
+router.patch('/:login', async (req, res) => {
     if(req.body && req.params.login) {
         const response = await UserService.getInstance().updateUser(req.params.login, req.body);
         res.status(response.success ? 200 : 400);
