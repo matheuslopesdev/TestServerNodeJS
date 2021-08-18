@@ -15,25 +15,24 @@ export default class UserService {
     }
 
     async getUserByLogin(login) {
-        logger.debug(`Starting getUserByLogin with ${JSON.stringify(login)}`);
+        logger.debug(`Starting UserService.getUserByLogin with ${JSON.stringify(login)}`);
         
         let result;
 
         try {
             const dbResponse = await UserModel.findByLogin(login);
-            console.log(JSON.stringify(dbResponse));
-            result = new Result(true, dbResponse);
+            result = new Result(!!dbResponse, dbResponse);
         }
         catch(ex) {
-            result = handleError(ex);
+            result = handleError(ex, logger);
         }
 
-        logger.debug(`Finishing getUserByLogin with response ${JSON.stringify(result)}`);
+        logger.debug(`Finishing UserService.getUserByLogin with response ${JSON.stringify(result)}`);
         return result;
     }
 
     async createUser(user) {
-        logger.debug(`Starting createUser with ${JSON.stringify(user)}`);
+        logger.debug(`Starting UserService.createUser with ${JSON.stringify(user)}`);
 
         let result;
 
@@ -46,12 +45,12 @@ export default class UserService {
             result = handleError(ex, logger);
         }
 
-        logger.debug(`Finishing createUser with response ${JSON.stringify(result)}`);
+        logger.debug(`Finishing UserService.createUser with response ${JSON.stringify(result)}`);
         return result;
     }
 
     async updateUser(login, user) {
-        logger.debug(`Starting updateUser with ${JSON.stringify(user)}`);
+        logger.debug(`Starting UserService.updateUser with ${JSON.stringify(user)}`);
 
         let result;
 
@@ -63,12 +62,12 @@ export default class UserService {
             result = handleError(ex, logger);
         }
 
-        logger.debug(`Finishing updateUser with response ${JSON.stringify(result)}`);
+        logger.debug(`Finishing UserService.updateUser with response ${JSON.stringify(result)}`);
         return result;
     }
 
     async deleteUser(login) {
-        logger.debug(`Starting deleteUser with ${JSON.stringify(login)}`);
+        logger.debug(`Starting UserService.deleteUser with ${JSON.stringify(login)}`);
 
         let result;
 
@@ -80,7 +79,7 @@ export default class UserService {
             result = handleError(ex, logger);
         }
 
-        logger.debug(`Finishing deleteUser with response ${JSON.stringify(result)}`);
+        logger.debug(`Finishing UserService.deleteUser with response ${JSON.stringify(result)}`);
         return result;
     }
 }
