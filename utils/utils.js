@@ -1,7 +1,7 @@
 import Result from './result.js';
 
 export const handleError = (error, logger) => {
-    let errorMessage = typeof error === "string" ? error : error.message;
+    let errorMessage = typeof error === "string" ? error : error.stack;
     
     if(!errorMessage) {
         errorMessage = error.body != null ? error.body.message : 'An error occurred, try again or contact your administrator!';

@@ -1,9 +1,11 @@
 import express from 'express';
+import Passport from 'passport';
+
 import MessageService from '../services/messageService.js';
 
 var router = express.Router();
 
-router.post('/', async (req, res) => {
+router.post('/', Passport.authenticate('jwt', { session: false }), async (req, res) => {
     if(req.body) {
         const response = await MessageService.getInstance().postMessage(req.body);
         res.status(response.success ? 200 : 400);
