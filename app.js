@@ -12,7 +12,8 @@ var app = new ServerLoader().load();
 await new AuthLoader().load();
 
 process.on('uncaughtException', err => {
-    logger.error('There was an uncaught error', err)
+    logger.error('There was an uncaught error ' + err?.message);
+    logger.error(err?.stack);
     process.exit(1) //mandatory (as per the Node.js docs)
 });
 
