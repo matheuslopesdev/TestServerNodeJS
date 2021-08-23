@@ -20,7 +20,7 @@ router.get('/:login', Passport.authenticate('jwt', { session: false }), async (r
 });
 
 /* Create new user */
-router.post('/', Passport.authenticate('jwt', { session: false }), async (req, res) => {
+router.post('/', async (req, res) => {
     if(req.body) {
         const response = await UserService.getInstance().createUser(req.body);
         res.status(response.success ? 200 : 400);

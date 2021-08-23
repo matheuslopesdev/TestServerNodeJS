@@ -38,7 +38,7 @@ export default class MessageService {
             const document = new MessageModel(message);
             const dbResponse = await document.save();
 
-            result = new Result(true, 'Message posted successfully');
+            result = new Result(true, 'Message posted successfully!');
             result.messageId = dbResponse._id;
         }
         catch(ex) {
@@ -63,8 +63,8 @@ export default class MessageService {
             }
 
             const processedRows = await handleXlsxFromStream(fileStream, ['test'], this.processMessageRow.bind(user));
-            // TODO: insert rows and send the app to aws
-            result = new Result(true, processedRows);
+            await MessageModel.insertMany(processedRows);
+            result = new Result(true, 'Messages posted successfully!');
         }
         catch(ex) {
             result = handleError(ex, logger);
